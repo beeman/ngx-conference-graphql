@@ -1,31 +1,27 @@
-import "reflect-metadata";
-import { GraphQLServer, Options } from "graphql-yoga";
-import { buildSchema } from "type-graphql";
+import 'reflect-metadata'
+import { GraphQLServer, Options } from 'graphql-yoga'
 
-import { MultiResolver } from "./resolver";
+import './setup-di'
+
+import { setupSchema } from './setup-schema'
 
 async function bootstrap() {
-  // build TypeGraphQL executable schema
-  const schema = await buildSchema({
-    resolvers: [MultiResolver],
-  });
 
-  // Create GraphQL server
-  const server = new GraphQLServer({ schema });
+  const schema = await setupSchema()
 
-  // Configure server options
+  const server = new GraphQLServer({ schema })
+
   const serverOptions: Options = {
     port: 4000,
-    endpoint: "/graphql",
-    playground: "/playground",
-  };
+    endpoint: '/graphql',
+    playground: '/playground',
+  }
 
-  // Start the server
   server.start(serverOptions, ({ port, playground }) => {
     console.log(
       `Server is running, GraphQL Playground available at http://localhost:${port}${playground}`,
-    );
-  });
+    )
+  })
 }
 
-bootstrap();
+bootstrap()
